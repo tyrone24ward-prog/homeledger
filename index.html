@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#17324d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta
+      name="description"
+      content="A private monthly expense tracker for Tyrone and Pamela."
+    />
+    <title>HomeLedger — Monthly Expenses</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="login-shell" id="loginView">
+      <div class="login-stage">
+        <header class="login-topbar">
+          <strong>HOMELEDGER</strong>
+          <button
+            class="text-size-toggle login-text-size"
+            type="button"
+            data-text-size-toggle
+            aria-pressed="false"
+            aria-label="Turn on larger text"
+          >
+            <span aria-hidden="true">🔍</span>
+            <span data-text-size-label>Larger text</span>
+          </button>
+        </header>
+
+        <div class="login-greeting">
+          <h1 id="loginGreeting">Good morning</h1>
+        </div>
+
+        <form class="login-card" id="loginForm">
+          <h2 class="sr-only">Sign in to HomeLedger</h2>
+          <label class="login-field">
+            <span class="sr-only">Username</span>
+            <input
+              type="text"
+              id="username"
+              placeholder="Username"
+              autocomplete="username"
+              required
+            />
+          </label>
+          <label class="login-field">
+            <span class="sr-only">Password</span>
+            <span class="password-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+              />
+              <button class="text-button" type="button" id="showPassword">
+                Show
+              </button>
+            </span>
+          </label>
+
+          <label class="remember-username">
+            <input type="checkbox" id="rememberUsername" />
+            <span>Save username</span>
+          </label>
+
+          <p class="form-error" id="loginError" role="alert"></p>
+          <button class="login-submit" type="submit" id="loginSubmitButton">
+            <span>Sign in</span>
+            <span aria-hidden="true">→</span>
+          </button>
+
+        </form>
+
+      </div>
+    </section>
+
+    <div class="app-shell hidden" id="appView">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#">
+          <span class="brand-mark">HL</span>
+          <span>HomeLedger</span>
+        </a>
+
+        <nav aria-label="Main navigation">
+          <button class="nav-item active" data-section="overview">
+            <span class="nav-icon" aria-hidden="true">⌂</span> Overview
+          </button>
+          <button class="nav-item" data-section="expenses">
+            <span class="nav-icon" aria-hidden="true">▤</span> Expenses
+          </button>
+          <button class="nav-item" data-section="debts">
+            <span class="nav-icon" aria-hidden="true">◎</span>
+            <span class="nav-label nav-label-desktop">Debt balances</span>
+            <span class="nav-label nav-label-mobile">Loan/CC Debt</span>
+          </button>
+          <button class="nav-item" data-section="settings">
+            <span class="nav-icon" aria-hidden="true">⚙</span> Settings
+          </button>
+        </nav>
+
+        <button class="profile-button" id="profileButton">
+          <span class="avatar" id="avatar">T</span>
+          <span>
+            <strong id="profileName">Tyrone</strong>
+            <small>Household admin</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <button
+            class="icon-button menu-button"
+            id="menuButton"
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
+          <div>
+            <p class="eyebrow">Household finances</p>
+            <h2 id="pageTitle">August overview</h2>
+          </div>
+          <div class="topbar-actions">
+            <button
+              class="secondary-button text-size-toggle"
+              type="button"
+              data-text-size-toggle
+              aria-pressed="false"
+              aria-label="Turn on larger text"
+            >
+              <span aria-hidden="true">🔍</span>
+              <span data-text-size-label>Larger text</span>
+            </button>
+            <label class="month-control">
+              <span>Current month</span>
+              <input
+                type="month"
+                id="currentMonth"
+                value="2026-08"
+                title="Updates automatically"
+                disabled
+              />
+            </label>
+            <button class="secondary-button" id="exportButton">Export CSV</button>
+            <button class="secondary-button sync-button" id="syncButton">
+              <span>↻</span> Sync
+            </button>
+            <button class="primary-button" id="addExpenseButton">
+              <span>＋</span> Add expense
+            </button>
+          </div>
+        </header>
+
+        <section class="page-section" id="overviewSection">
+          <div class="welcome-row">
+            <div>
+              <h1 id="welcomeHeading">Good afternoon, Tyrone</h1>
+              <p id="overviewSubtitle">August household expenses at a glance.</p>
+            </div>
+            <div class="affirmation-badge" aria-live="polite">
+              <span class="affirmation-icon" aria-hidden="true">✦</span>
+              <span id="affirmationText">Every dollar tracked builds confidence.</span>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card featured">
+              <div class="metric-top">
+                <span>Total monthly outflow</span>
+                <span class="metric-icon">↗</span>
+              </div>
+              <strong id="totalOutflow">$0.00</strong>
+              <div class="metric-progress-heading">
+                <span>Loan &amp; CC debt payoff</span>
+                <strong id="debtPayoffPercent">0.0% paid off</strong>
+              </div>
+              <div class="progress-track light">
+                <span id="debtPayoffProgress"></span>
+              </div>
+              <p id="debtPayoffCaption">
+                0.0% remaining · $0.00 left
+              </p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>Income Need</span>
+                <span class="metric-icon blue">＋</span>
+              </div>
+              <strong id="householdIncome">$0.00</strong>
+              <p class="metric-note">Target income for the month</p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>Active debt balance</span>
+                <span class="metric-icon orange">◎</span>
+              </div>
+              <strong id="debtBalance">$0.00</strong>
+              <p class="metric-note">Across active balances</p>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel spending-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow accent">Monthly spending</p>
+                  <h3>Expenses by category</h3>
+                </div>
+                <button class="text-link" data-goto="expenses">View all</button>
+              </div>
+              <div class="category-chart" id="categoryChart"></div>
+            </article>
+
+            <article class="panel upcoming-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow accent">Largest expenses</p>
+                  <h3>Top monthly commitments</h3>
+                </div>
+              </div>
+              <div class="upcoming-list" id="largestExpenses"></div>
+            </article>
+
+            <article class="panel benchmark-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow accent">Imported budget snapshot</p>
+                  <h3>Actual bills vs. “paying now”</h3>
+                </div>
+                <small>Source sheet values</small>
+              </div>
+              <div class="benchmark-grid">
+                <div class="benchmark-label"></div>
+                <strong>Actual bills</strong>
+                <strong>Paying now</strong>
+                <strong>Overage</strong>
+                <span>Weekly</span>
+                <b id="benchmarkActualWeekly">$0.00</b>
+                <b id="benchmarkPayingWeekly">$0.00</b>
+                <b class="positive" id="benchmarkWeeklyOverage">$0.00</b>
+                <span>Annually</span>
+                <b id="benchmarkActualAnnual">$0.00</b>
+                <b id="benchmarkPayingAnnual">$0.00</b>
+                <b class="positive" id="benchmarkAnnualOverage">$0.00</b>
+              </div>
+              <div class="benchmark-footer">
+                <span
+                  >Imported paying now
+                  <strong id="benchmarkPayingMonthly">$0.00/mo</strong></span
+                >
+                <span
+                  >Imported monthly overage
+                  <strong id="benchmarkMonthlyOverage">$0.00</strong></span
+                >
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-section hidden" id="expensesSection">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow accent">Monthly expenses</p>
+              <h1>All expenses</h1>
+              <p>Search, categorize, and assign each bill to Tyrone or Pamela.</p>
+            </div>
+          </div>
+
+          <div
+            class="payer-summary"
+            id="payerSummary"
+            aria-label="Monthly totals by payer"
+          ></div>
+
+          <div class="table-toolbar">
+            <label class="search-box">
+              <span>⌕</span>
+              <input id="expenseSearch" type="search" placeholder="Search expenses" />
+            </label>
+            <select id="categoryFilter" aria-label="Filter by category">
+              <option value="All">All categories</option>
+            </select>
+            <select id="payerFilter" aria-label="Filter by payer">
+              <option value="All">All payers</option>
+              <option value="Tyrone">Tyrone</option>
+              <option value="Pamela">Pamela</option>
+            </select>
+          </div>
+
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Bill</th>
+                    <th>Category</th>
+                    <th>Payer</th>
+                    <th>Monthly</th>
+                    <th>Balance</th>
+                    <th>Notes</th>
+                    <th aria-label="Actions"></th>
+                  </tr>
+                </thead>
+                <tbody id="expenseTableBody"></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span id="tableCount">0 expenses</span>
+              <strong id="tableTotal">$0.00</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-section hidden" id="debtsSection">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow accent">Debt tracker</p>
+              <h1>Balances & payoff notes</h1>
+              <p>Tap any debt to edit its payment, balance, APR, payoff date, and notes.</p>
+            </div>
+          </div>
+          <div class="debt-summary-grid">
+            <article>
+              <span>Active balance total</span>
+              <strong id="debtPageTotal">$0.00</strong>
+            </article>
+            <article>
+              <span>Monthly debt payments</span>
+              <strong id="debtPayments">$0.00</strong>
+            </article>
+            <article>
+              <span>Sheet reconciliation</span>
+              <strong id="reconciliationValue">$0.00</strong>
+            </article>
+          </div>
+          <div class="reconciliation-note" id="reconciliationNote">
+            <span>i</span>
+            <p>
+              Debt reconciliation loads after secure sign-in.
+            </p>
+          </div>
+          <div class="debt-list" id="debtList"></div>
+        </section>
+
+        <section class="page-section hidden" id="settingsSection">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow accent">Preferences</p>
+              <h1>Household settings</h1>
+              <p>Manage the self-employed income estimate and local data.</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <form class="panel settings-card" id="incomeForm">
+              <h3>Monthly Income Need</h3>
+              <p>
+                Estimated gross self-employed income needed to pay every
+                expense with after-tax dollars.
+              </p>
+              <div class="income-need-results" aria-live="polite">
+                <span>
+                  Monthly expenses
+                  <strong id="monthlyExpensesNeed">$0.00</strong>
+                </span>
+                <span class="income-need-primary">
+                  Before-tax monthly need
+                  <strong id="grossMonthlyIncomeNeed">$0.00</strong>
+                </span>
+                <span>
+                  Before-tax annual need
+                  <strong id="grossAnnualIncomeNeed">$0.00</strong>
+                </span>
+              </div>
+              <div class="tax-rate-grid">
+                <label>
+                  Federal income tax
+                  <span class="input-suffix">
+                    <input
+                      type="number"
+                      id="federalTaxRate"
+                      min="0"
+                      max="50"
+                      step="0.1"
+                      required
+                    />
+                    <span>%</span>
+                  </span>
+                </label>
+                <label>
+                  California income tax
+                  <span class="input-suffix">
+                    <input
+                      type="number"
+                      id="californiaTaxRate"
+                      min="0"
+                      max="50"
+                      step="0.1"
+                      required
+                    />
+                    <span>%</span>
+                  </span>
+                </label>
+                <label>
+                  Self-employment tax
+                  <span class="input-suffix">
+                    <input
+                      type="number"
+                      id="selfEmploymentTaxRate"
+                      min="0"
+                      max="50"
+                      step="0.1"
+                      required
+                    />
+                    <span>%</span>
+                  </span>
+                </label>
+              </div>
+              <p class="tax-rate-total">
+                Combined estimated tax rate:
+                <strong id="combinedTaxRate">36.6%</strong>
+              </p>
+              <p class="tax-estimate-note">
+                Planning estimate only. Rates are applied together; deductions,
+                tax brackets, and Social Security limits can change the actual
+                amount owed.
+              </p>
+              <button class="primary-button" type="submit">Save tax rates</button>
+            </form>
+
+            <div class="panel settings-card data-card">
+              <h3>Local data</h3>
+              <p>
+                Changes are saved locally and synchronized to the private
+                household cloud after sign-in.
+              </p>
+              <button class="secondary-button" id="settingsExportButton">
+                Export CSV backup
+              </button>
+              <button class="secondary-button" id="settingsSignOutButton">
+                Sign out
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="expenseDialog">
+      <form method="dialog" id="expenseForm">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow accent" id="dialogEyebrow">New line item</p>
+            <h2 id="dialogTitle">Add expense</h2>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            id="closeExpenseDialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        <input type="hidden" id="expenseId" />
+        <div class="form-grid">
+          <label class="span-two">
+            Bill name
+            <input type="text" id="expenseName" required />
+          </label>
+          <label>
+            Category
+            <select id="expenseCategory" required></select>
+          </label>
+          <label>
+            Payer
+            <select id="expensePayer" required>
+              <option value="Tyrone">Tyrone</option>
+              <option value="Pamela">Pamela</option>
+            </select>
+          </label>
+          <div class="standard-payment-fields span-two" id="standardPaymentFields">
+            <label id="monthlyAmountField">
+              <span id="monthlyAmountLabel">Monthly amount</span>
+              <input type="number" id="expenseAmount" min="0" step="0.01" required />
+            </label>
+            <label id="balanceField">
+              Current or estimated balance
+              <input type="number" id="expenseBalance" min="0" step="0.01" />
+              <input type="hidden" id="balanceEstimated" value="false" />
+              <small class="field-note hidden" id="balanceEstimateNote"></small>
+            </label>
+            <label class="hidden" id="interestRateField">
+              Annual interest rate (APR)
+              <div class="input-suffix">
+                <input
+                  type="number"
+                  id="expenseInterestRate"
+                  min="0"
+                  step="0.01"
+                  placeholder="Enter the lender’s rate"
+                />
+                <span>%</span>
+              </div>
+            </label>
+            <label class="hidden" id="payoffDateField">
+              Payoff date
+              <input type="date" id="expensePayoffDate" />
+            </label>
+          </div>
+          <section class="debt-projection span-two hidden" id="debtProjectionPreview">
+            <div class="projection-heading">
+              <div>
+                <strong>Loan Calculator</strong>
+                <small>Enter any two values. Assumptions are shown after calculation.</small>
+              </div>
+              <button class="secondary-button" type="button" id="calculateLoanButton">
+                Calculate
+              </button>
+            </div>
+            <div class="loan-calculator-fields" id="loanCalculatorFields"></div>
+            <div class="projection-grid" id="projectionGrid"></div>
+            <p class="projection-warning hidden" id="projectionWarning">
+              Enter at least two values, then select Calculate.
+            </p>
+          </section>
+          <label class="span-two">
+            Notes
+            <textarea id="expenseNotes" rows="3"></textarea>
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button
+            class="danger-button hidden"
+            value="cancel"
+            type="button"
+            id="deleteDialogButton"
+          >
+            Delete bill
+          </button>
+          <button class="secondary-button" value="cancel" type="button" id="cancelDialog">
+            Cancel
+          </button>
+          <button class="primary-button" value="default" type="submit">
+            Save expense
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="syncDialog">
+      <section class="sync-card">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow accent">Private household cloud</p>
+            <h2>Cloud sync &amp; backup</h2>
+          </div>
+          <button class="icon-button" type="button" id="closeSyncDialog" aria-label="Close">
+            ×
+          </button>
+        </div>
+        <p>
+          Changes sync securely between Tyrone and Pamela. You can also
+          download or import a complete offline backup.
+        </p>
+        <div class="sync-actions">
+          <button class="primary-button" type="button" id="syncNowButton">
+            Sync now
+          </button>
+          <button class="primary-button" type="button" id="downloadSyncButton">
+            Download sync file
+          </button>
+          <button class="secondary-button" type="button" id="importSyncButton">
+            Import sync file
+          </button>
+          <input
+            class="hidden"
+            type="file"
+            id="syncFileInput"
+            accept="application/json,.json"
+          />
+        </div>
+        <small id="syncStatus">Secure cloud sync is connecting.</small>
+      </section>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
