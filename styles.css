@@ -2525,8 +2525,9 @@ dialog::backdrop {
   }
 
   tbody tr.expense-row.payer-tyrone {
-    border-color: #9db3c5;
-    background: var(--blue-soft);
+    border-color: #587b9c;
+    background: #bfd2e3;
+    box-shadow: inset 4px 0 0 var(--navy);
   }
 
   tbody tr.expense-row.payer-pamela {
