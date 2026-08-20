@@ -1,3 +1,4 @@
 .env
 .env.*
+.homeledger-restore.sql
 supabase/.temp/
