@@ -2525,9 +2525,9 @@ dialog::backdrop {
   }
 
   tbody tr.expense-row.payer-tyrone {
-    border-color: #587b9c;
-    background: #bfd2e3;
-    box-shadow: inset 4px 0 0 var(--navy);
+    border-color: var(--navy);
+    background: linear-gradient(135deg, var(--navy-2), var(--navy));
+    box-shadow: inset 4px 0 0 #82d0b4;
   }
 
   tbody tr.expense-row.payer-pamela {
@@ -2684,6 +2684,36 @@ dialog::backdrop {
   .row-button {
     width: 40px;
     height: 40px;
+  }
+
+  tbody tr.expense-row.payer-tyrone,
+  tbody tr.expense-row.payer-tyrone td,
+  tbody tr.expense-row.payer-tyrone td strong,
+  tbody tr.expense-row.payer-tyrone td.amount {
+    color: #fff;
+  }
+
+  tbody tr.expense-row.payer-tyrone::after,
+  tbody tr.expense-row.payer-tyrone .bill-cell small,
+  tbody tr.expense-row.payer-tyrone td.balance > small,
+  tbody tr.expense-row.payer-tyrone td[data-label]::before,
+  tbody tr.expense-row.payer-tyrone td.amount strong::after,
+  tbody tr.expense-row.payer-tyrone .notes-cell {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  tbody tr.expense-row.payer-tyrone .category-pill {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  tbody tr.expense-row.payer-tyrone .notes-cell {
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+
+  tbody tr.expense-row.payer-tyrone .row-button {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
   }
 
   .table-footer {
