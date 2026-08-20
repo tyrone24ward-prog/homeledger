@@ -400,6 +400,10 @@ function renderAll() {
 function renderHeader() {
   const month = new Date(`${state.currentMonth}-02T12:00:00`);
   const monthName = month.toLocaleDateString("en-US", { month: "long" });
+  const abbreviatedMonth = month.toLocaleDateString("en-US", {
+    month: "short",
+  });
+  const year = month.getFullYear();
   const sectionTitles = {
     overview: `${monthName} overview`,
     expenses: `${monthName} expenses`,
@@ -407,7 +411,11 @@ function renderHeader() {
     settings: "Household settings",
   };
 
-  $("#pageTitle").textContent = sectionTitles[currentSection];
+  $("#pageTitleDesktop").textContent = sectionTitles[currentSection];
+  $("#pageTitleMobile").textContent =
+    currentSection === "overview"
+      ? `${abbreviatedMonth} ${year}`
+      : sectionTitles[currentSection];
   $("#currentMonth").value = state.currentMonth;
   $("#overviewSubtitle").textContent =
     `${monthName} household expenses at a glance.`;

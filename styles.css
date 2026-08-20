@@ -763,6 +763,10 @@ main {
   letter-spacing: -0.025em;
 }
 
+.page-title-mobile {
+  display: none;
+}
+
 .topbar .eyebrow {
   margin-bottom: 3px;
 }
@@ -2253,6 +2257,14 @@ dialog::backdrop {
     font-size: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  #pageTitleDesktop {
+    display: none;
+  }
+
+  .page-title-mobile {
+    display: inline;
   }
 
   .topbar .primary-button {
