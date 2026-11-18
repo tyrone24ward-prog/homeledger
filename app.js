@@ -1193,11 +1193,11 @@ function exportCsv() {
 }
 
 function openSyncDialog() {
-  const status = state.lastSyncedAt
-    ? `Last cloud sync: ${new Date(state.lastSyncedAt).toLocaleString()}`
-    : cloudReady
-      ? "Secure cloud sync is ready."
-      : "Secure cloud sync is connecting.";
+  const status = cloudReady
+    ? state.lastSyncedAt
+      ? `Last cloud sync: ${new Date(state.lastSyncedAt).toLocaleString()}`
+      : "Secure cloud sync is ready."
+    : "Cloud sync is off. This ledger is saved on this device.";
   $("#syncStatus").textContent = status;
   $("#syncDialog").showModal();
 }
@@ -1298,6 +1298,18 @@ function setTextSizeLevel(level, { persist = true } = {}) {
   if (persist) localStorage.setItem(TEXT_SIZE_KEY, normalizedLevel);
 }
 
+function openLocalApp() {
+  const remembered = (localStorage.getItem(REMEMBERED_USERNAME_KEY) || "")
+    .trim()
+    .toLowerCase();
+  activeUser = AUTH_PROFILES[remembered] || activeUser || "Tyrone";
+  currentAuthUser = null;
+  cloudReady = false;
+  $("#loginView").classList.add("hidden");
+  $("#appView").classList.remove("hidden");
+  renderAll();
+}
+
 async function openAuthenticatedApp(user, profileName) {
   if (!["Tyrone", "Pamela"].includes(profileName)) {
     await supabaseClient.auth.signOut();
@@ -1382,6 +1394,7 @@ async function signOut() {
 }
 
 function bindEvents() {
+  $("#openLocalButton").addEventListener("click", () => openLocalApp());
   $("#loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = $("#loginSubmitButton");
@@ -1594,24 +1607,7 @@ async function init() {
   }, 60 * 60 * 1000);
   renderAll();
   scheduleDailyAffirmation();
-
-  try {
-    const {
-      data: { session },
-      error,
-    } = await supabaseClient.auth.getSession();
-    if (error) throw error;
-    if (session?.user) {
-      await openAuthenticatedApp(
-        session.user,
-        localStorage.getItem(AUTH_PROFILE_KEY),
-      );
-    }
-  } catch (error) {
-    console.warn("Could not restore the HomeLedger session.", error);
-    await supabaseClient.auth.signOut();
-    $("#loginError").textContent = error.message;
-  }
+  openLocalApp();
 }
 
 init().catch((error) => {
